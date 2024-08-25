@@ -1,5 +1,5 @@
 (function togglePageBackgroundColor() {
-
+  console.log("Running toggle IIFE");
 	let darkModeActive = JSON.parse(localStorage.getItem('ChromeExtensionDarkModeActive'));
 
 	if (document.location.protocol === "file:") {
@@ -9,27 +9,40 @@
 			pdfElement.style.filter = darkModeActive ? "invert(88%)" : "invert(0)";
 		}
 	} else {
-		// invert regular page
-		document.body.style.filter = darkModeActive ? "invert(90%)" : "invert(0)";
 
-		// invert back images 
-		const imgElementes = document.querySelectorAll('img');
-		imgElementes.forEach(imgElem => imgElem.style.filter = darkModeActive ? "invert(100%)" : "invert(0)");
+    //document.body.style.backgroundColor = darkModeActive ? "#1A1A1A" : "white";
+    //alert(`darkModeActive: ${darkModeActive}`);
 
-		// invert back links (set to blue when inverted)
-		const links = document.body.querySelectorAll('a');
-		links.forEach(link => link.style.color = darkModeActive ? '#f29102' : '#0d6efd');
 
-		// invert background color of transparent elements
-		// const elements = document.querySelectorAll('body, main');
-		// elements.forEach(elem => {
-		//   if(window.getComputedStyle(elem).backgroundColor === 'rgba(0, 0, 0, 0)') {
-		//     console.log(elem.className + ": " + window.getComputedStyle(elem).backgroundColor);
-		//     elem.style.backgroundColor = darkModeActive ? '#212121' : 'rgba(0, 0, 0, 0)';
-		//     elem.style.color = darkModeActive ? 'white' : 'black';
+		if(window.getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)') {
+      alert("white background");
+      document.body.style.backgroundColor = "#1A1A1A";
+    } else if(window.getComputedStyle(document.body).backgroundColor === 'rgba(0, 0, 0, 0)') {
+      // transparent background
+      alert("transparent background");
+      document.body.style.backgroundColor = darkModeActive ? "#1A1A1A" : "white !important";
+      document.body.style.filter = darkModeActive ? "invert(90%)" : "invert(0)";
 
-		//   }
-		// });
+      // invert back images 
+      const imgElementes = document.querySelectorAll('img');
+      imgElementes.forEach(imgElem => imgElem.style.filter = darkModeActive ? "invert(100%)" : "invert(0)");
+
+      // invert back links (set to blue when inverted)
+      const links = document.body.querySelectorAll('a');
+      links.forEach(link => link.style.color = darkModeActive ? '#f29102' : '#0d6efd');
+    } else {
+      alert("non white background");
+      // invert regular page
+      document.body.style.filter = darkModeActive ? "invert(90%)" : "invert(0)";
+      
+      // invert back images 
+      const imgElementes = document.querySelectorAll('img');
+      imgElementes.forEach(imgElem => imgElem.style.filter = darkModeActive ? "invert(100%)" : "invert(0)");
+
+      // invert back links (set to blue when inverted)
+      const links = document.body.querySelectorAll('a');
+      links.forEach(link => link.style.color = darkModeActive ? '#f29102' : '#0d6efd');
+    }
 
 
 		chrome.tabs.query({
