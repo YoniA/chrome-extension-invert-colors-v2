@@ -1,5 +1,4 @@
 (function togglePageBackgroundColor() {
-  console.log("Running toggle IIFE");
 	let darkModeActive = JSON.parse(localStorage.getItem('ChromeExtensionDarkModeActive'));
 
 	if (document.location.protocol === "file:") {
@@ -10,17 +9,16 @@
 		}
 	} else {
 
-    //document.body.style.backgroundColor = darkModeActive ? "#1A1A1A" : "white";
-    //alert(`darkModeActive: ${darkModeActive}`);
+    function isGray(rgb) {
+      const rgbValues = rgb.match(/\d+/g).map(Number);
+      return rgbValues[0] === rgbValues[1] && rgbValues[1] === rgbValues[2];
+    }
 
+    const bodyBgColor = window.getComputedStyle(document.body).backgroundColor; 
 
-		if(window.getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)') {
-      alert("white background");
+		if(isGray(bodyBgColor)) {
+      // grayscale background
       document.body.style.backgroundColor = "#1A1A1A";
-    } else if(window.getComputedStyle(document.body).backgroundColor === 'rgba(0, 0, 0, 0)') {
-      // transparent background
-      alert("transparent background");
-      document.body.style.backgroundColor = darkModeActive ? "#1A1A1A" : "white !important";
       document.body.style.filter = darkModeActive ? "invert(90%)" : "invert(0)";
 
       // invert back images 
@@ -31,7 +29,7 @@
       const links = document.body.querySelectorAll('a');
       links.forEach(link => link.style.color = darkModeActive ? '#f29102' : '#0d6efd');
     } else {
-      alert("non white background");
+      // non grayscale background
       // invert regular page
       document.body.style.filter = darkModeActive ? "invert(90%)" : "invert(0)";
       
@@ -43,21 +41,5 @@
       const links = document.body.querySelectorAll('a');
       links.forEach(link => link.style.color = darkModeActive ? '#f29102' : '#0d6efd');
     }
-
-
-		chrome.tabs.query({
-			active: true,
-			currentWindow: true
-		}, async function (tabs) {
-			var currTab = tabs[0];
-			if (currTab) {
-				await chrome.action.setBadgeText({
-					tabId: currTab,
-					text: "foo"
-				});
-			}
-		});
-
-
 	}
 })();
