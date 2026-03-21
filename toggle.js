@@ -1,12 +1,12 @@
 (function togglePageBackgroundColor() {
 	let darkModeActive = JSON.parse(localStorage.getItem('ChromeExtensionDarkModeActive'));
 
-	if (document.location.protocol === "file:") {
-		// invert pdf
-		const pdfElement = document.querySelector('embed[type="application/pdf"]');
-		if (pdfElement) {
-			pdfElement.style.filter = darkModeActive ? "invert(88%)" : "invert(0)";
-		}
+	const isPdf = document.location.pathname.endsWith('.pdf') ||
+		document.contentType === 'application/pdf';
+
+	if (isPdf) {
+		// invert pdf — apply to documentElement to work across shadow root boundary
+		document.documentElement.style.filter = darkModeActive ? "invert(88%)" : "";
 	} else {
 
     function isGray(rgb) {
