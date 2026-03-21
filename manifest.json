@@ -9,8 +9,16 @@
     "permissions": ["activeTab", "scripting", "storage", "history", "tabs"],
     "host_permissions": [
         "http://*/*",
-        "https://*/*"
+        "https://*/*",
+        "file://*/*"
       ],
+    "content_scripts": [
+        {
+            "matches": ["file://*/*.pdf"],
+            "js": ["pdf-auto-dark.js"],
+            "run_at": "document_end"
+        }
+    ],
     "action": {
         "default_icon": {
             "16": "/images/day-and-night16.png",
