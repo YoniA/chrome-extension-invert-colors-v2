@@ -4,42 +4,24 @@
 	const isPdf = document.location.pathname.endsWith('.pdf') ||
 		document.contentType === 'application/pdf';
 
-	if (isPdf) {
-		// invert pdf — apply to documentElement to work across shadow root boundary
-		document.documentElement.style.filter = darkModeActive ? "invert(88%)" : "";
+	const styleId = '_invert-ext-style';
+	const existingStyle = document.getElementById(styleId);
+
+	if (darkModeActive) {
+		if (!existingStyle) {
+			const style = document.createElement('style');
+			style.id = styleId;
+			const invertPct = isPdf ? '88%' : '90%';
+			style.textContent = [
+				`html { filter: invert(${invertPct}) !important; background-color: white !important; }`,
+				`img, video { filter: invert(100%) !important; }`,
+			].join('\n');
+			document.head.appendChild(style);
+		}
 	} else {
-
-    function isGray(rgb) {
-      const rgbValues = rgb.match(/\d+/g).map(Number);
-      return rgbValues[0] === rgbValues[1] && rgbValues[1] === rgbValues[2];
-    }
-
-    const bodyBgColor = window.getComputedStyle(document.body).backgroundColor; 
-
-		if(isGray(bodyBgColor)) {
-      // grayscale background
-      document.body.style.backgroundColor = "#1A1A1A";
-      document.body.style.filter = darkModeActive ? "invert(90%)" : "invert(0)";
-
-      // invert back images 
-      const imgElementes = document.querySelectorAll('img');
-      imgElementes.forEach(imgElem => imgElem.style.filter = darkModeActive ? "invert(100%)" : "invert(0)");
-
-      // invert back links (set to blue when inverted)
-      const links = document.body.querySelectorAll('a');
-      links.forEach(link => link.style.color = darkModeActive ? '#f29102' : '#0d6efd');
-    } else {
-      // non grayscale background
-      // invert regular page
-      document.body.style.filter = darkModeActive ? "invert(90%)" : "invert(0)";
-      
-      // invert back images 
-      const imgElementes = document.querySelectorAll('img');
-      imgElementes.forEach(imgElem => imgElem.style.filter = darkModeActive ? "invert(100%)" : "invert(0)");
-
-      // invert back links (set to blue when inverted)
-      const links = document.body.querySelectorAll('a');
-      links.forEach(link => link.style.color = darkModeActive ? '#f29102' : '#0d6efd');
-    }
+		existingStyle?.remove();
+		// clear any inline styles left by older versions
+		document.documentElement.style.filter = '';
+		document.documentElement.style.backgroundColor = '';
 	}
 })();
