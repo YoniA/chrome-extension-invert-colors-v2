@@ -16,6 +16,16 @@ chrome.tabs.onActivated.addListener(
 	});
 
 
+// sync badge when content script reports state on navigation
+chrome.runtime.onMessage.addListener((message, sender) => {
+	if (sender.tab && 'darkModeActive' in message) {
+		chrome.action.setBadgeText({
+			tabId: sender.tab.id,
+			text: message.darkModeActive ? 'DARK' : 'DAY',
+		});
+	}
+});
+
 // on clicking the extension icon
 chrome.action.onClicked.addListener(async (tab) => {
 

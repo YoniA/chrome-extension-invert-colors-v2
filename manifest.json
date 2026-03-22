@@ -17,6 +17,11 @@
             "matches": ["file://*/*.pdf"],
             "js": ["pdf-auto-dark.js"],
             "run_at": "document_end"
+        },
+        {
+            "matches": ["http://*/*", "https://*/*"],
+            "js": ["toggle.js"],
+            "run_at": "document_end"
         }
     ],
     "action": {

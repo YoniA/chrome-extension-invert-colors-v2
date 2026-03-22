@@ -24,4 +24,11 @@
 		document.documentElement.style.filter = '';
 		document.documentElement.style.backgroundColor = '';
 	}
+
+	// sync badge text with current state (needed when running as a content script on navigation)
+	try {
+		chrome.runtime.sendMessage({ darkModeActive: !!darkModeActive });
+	} catch (e) {
+		// not available in all execution contexts (e.g. executeScript), safe to ignore
+	}
 })();
