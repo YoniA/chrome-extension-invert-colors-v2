@@ -14,7 +14,7 @@
 			const invertPct = isPdf ? '88%' : '90%';
 			style.textContent = [
 				`html { filter: invert(${invertPct}) !important; background-color: white !important; }`,
-				`img, video, iframe { filter: invert(100%) !important; }`,
+				`img:not(.mw-invert):not(.skin-invert), video, iframe { filter: invert(100%) !important; }`,
 			].join('\n');
 			document.head.appendChild(style);
 		}
